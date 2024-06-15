@@ -25,6 +25,7 @@ public:
     void insert_text(char *input);
     void save_to_file(char *input);
      void free_input();
+    void delete_command(char *input);
 };
 void Program::add_text(char *input, size_t bufferSize) {
     printf("Enter the text : ");
@@ -205,6 +206,41 @@ void Program::free_input() {
 }
 
 
+
+void Program::delete_command(char *input) {
+    int line, index, len;
+    printf("Enter the line, index, and length: ");
+    scanf("%d %d %d", &line, &index, &len);
+    getchar();
+
+    int current_line = 0, current_index = 0;
+    char *position = input;
+
+    while (current_line < line && *position != '\0') {
+        if (*position == '\n') {
+            current_line++;
+        }
+        position++;
+    }
+
+    if (current_line == line) {
+        while (current_index < index && *position != '\n' && *position != '\0') {
+            position++;
+            current_index++;
+        }
+
+        char result[BUFFER_SIZE];
+        strncpy(result, input, position - input);
+        result[position - input] = '\0';
+
+        strncat(result, position + len, BUFFER_SIZE);
+        strncpy(input, result, BUFFER_SIZE);
+    } else {
+        printf("Line %d not found.\n", line);
+    }
+}
+
+
 int main() {
     Program program;
     int choice;
@@ -219,7 +255,21 @@ int main() {
         printf("5. Надрукувати поточний текст на консоль\n");
         printf("6. Вставити підстроку\n");
         printf("7. Пошук позиції підстроки\n");
-        printf("8. Видалити файл\n");
+        printf("8. Видалити  \n");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         printf("0. Вихід\n");
         printf("===============================\n");
         printf("Введіть ваш вибір: ");
@@ -256,16 +306,9 @@ int main() {
                 program.search_substring(program.input);
                 break;
             case 8:
-                // printf("Введіть ім'я файлу для видалення: ");
-                // char filename[FILENAME_SIZE];
-                // fgets(filename, FILENAME_SIZE, stdin);
-                // filename[strcspn(filename, "\n")] = '\'\0';
-                // if (remove(filename) == 0) {
-                //     printf("Файл успішно видалено.\n");
-                // } else {
-                //     printf("Помилка видалення файлу.\n");
-                // }
-                // break;
+
+                program.delete_command(program.input);
+                break;
             case 0:
                 program.free_input();
                 break;
